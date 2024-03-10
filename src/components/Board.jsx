@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+
 function Board() {
     const [boards, setBoards] = useState([
         {
@@ -28,108 +29,112 @@ function Board() {
         }
       ]);
     
+
       const [currentBoard, setCurrentBoard] = useState(null);
       const [currentItem, setCurrentItem] = useState(null);
       const [newTitle, setNewTitle] = useState('');
       const [newDescription, setNewDescription] = useState('');
-    
-      const addNewItem = (boardId) => {
-        const newCard = {
-          id: Date.now(),
-          title: newTitle,
-          description: newDescription
-        };
-    
+      const [addingNewItem, setAddingNewItem] = useState({});
+      const [hoveredItem, setHoveredItem] = useState(null);
+
+      const handleAddNewItem = (boardId) => {
+        const newCard = { id: Date.now(), title: newTitle, description: newDescription };
+        
         setBoards(boards => boards.map(board => {
-          if (board.id === boardId) {
-            return { ...board, items: [...board.items, newCard] };
-          }
-          return board;
+            if (board.id === boardId) {
+                return { ...board, items: [...board.items, newCard] };
+            }
+            return board;
         }));
-    
+
+        setAddingNewItem({ ...addingNewItem, [boardId]: false }); // Скрыть форму добавления после создания нового дела
+        // Сбросить поля ввода
         setNewTitle('');
         setNewDescription('');
-      };
-    
+    };
+
+
       function dragStartHandler(e, board, item) {
         setCurrentBoard(board);
         setCurrentItem(item);
       }
     
-      function dragOverHandler(e) {
+      const dragOverHandler = (e, board, item) => {
         e.preventDefault();
-      }
-    
-      function dropHandler(e, board) {
+        setHoveredItem(item);
+    };
+      function dropHandler(e, board, targetItem = null) {
         e.preventDefault();
+        if (!currentItem || !currentBoard) return;
         if (currentItem && currentBoard) {
-          if (currentBoard.id === board.id) {
+            const startBoardIndex = boards.findIndex(b => b.id === currentBoard.id);
+            const finishBoardIndex = boards.findIndex(b => b.id === board.id);
+            
+            if(startBoardIndex < 0 || finishBoardIndex < 0) return; 
+    
+            const itemIndex = boards[startBoardIndex].items.findIndex(i => i.id === currentItem.id);
+            if(itemIndex < 0) return;
+    
+            const [removedItem] = boards[startBoardIndex].items.splice(itemIndex, 1);
+    
+            if (targetItem) {
+                
+                const targetIndex = boards[finishBoardIndex].items.findIndex(i => i.id === targetItem.id);
+                boards[finishBoardIndex].items.splice(targetIndex, 0, removedItem);
+            } else {
+                
+                boards[finishBoardIndex].items.push(removedItem);
+            }
+    
+         
+            setBoards([...boards]);
             setCurrentBoard(null);
             setCurrentItem(null);
-            return;
-          }
-    
-          const updatedBoards = boards.map(b => {
-            // Удаление элемента из его текущего местоположения
-            if (b.id === currentBoard.id) {
-              return { ...b, items: b.items.filter(i => i.id !== currentItem.id) };
-            } else if (b.id === board.id) {
-              // Добавление элемента на новую доску
-              return { ...b, items: [...b.items, currentItem] };
-            }
-            return b;
-          });
-    
-          setBoards(updatedBoards);
+            setHoveredItem(null);
         }
-        // Сброс текущего состояния перетаскивания
-        setCurrentBoard(null);
-        setCurrentItem(null);
-      }
+    }
+
+
+    const handleDeleteItem = (boardId, itemId) => {
+        setBoards(boards => boards.map(board => {
+            if (board.id === boardId) {
+                // Фильтруем список задач, исключая удаляемую задачу
+                const filteredItems = board.items.filter(item => item.id !== itemId);
+                return { ...board, items: filteredItems };
+            }
+            return board;
+        }));
+    };
     
-      return (
+    return (
         <div className="App">
-          {boards.map(board => (
-            <div
-              className='board'
-              key={board.id}
-              onDragOver={dragOverHandler}
-              onDrop={(e) => dropHandler(e, board)}
-            >
-              <div className='board__title'>{board.title}</div>
-              {board.id === 1 && (
-                <div className='item add-new-item'>
-                  <input
-                    type="text"
-                    placeholder="Заголовок"
-                    value={newTitle}
-                    onChange={(e) => setNewTitle(e.target.value)}
-                  />
-                  <textarea
-                    placeholder="Описание"
-                    value={newDescription}
-                    onChange={(e) => setNewDescription(e.target.value)}
-                  />
-                  <button onClick={() => addNewItem(board.id)}>Создать новое дело</button>
+            {boards.map((board) => (
+                <div className="board" key={board.id} onDragOver={(e) => dragOverHandler(e)} onDrop={(e) => dropHandler(e, board, hoveredItem)}>
+                    <div className="board__title">{board.title}</div>
+                    <div className="board__content">
+                    {board.items.map((item, index) => (
+                     <div key={item.id} draggable={true} onDragStart={(e) => dragStartHandler(e, board, item)} onDragOver={(e) => dragOverHandler(e, board, item)} className={`item ${item === hoveredItem ? 'hovered' : ''}`}>
+                         <div><strong>{item.title}</strong></div>
+                         <div>{item.description}</div>
+                         <button onClick={() => handleDeleteItem(board.id, item.id)} className="delete-item-button">X</button>
+                            </div>
+                        ))}
+                    </div>
+                    {addingNewItem[board.id] ? (
+                        <div className="add-item-form">
+                            <input type="text" placeholder="Заголовок" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} />
+                            <textarea placeholder="Описание" value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
+                            <button onClick={() => handleAddNewItem(board.id)}>Создать</button>
+                        </div>
+                    ) : (
+                        <button className="add-item-button" onClick={() => setAddingNewItem({ ...addingNewItem, [board.id]: true })}>Добавить новое дело +</button>
+                    )}
                 </div>
-              )}
-              {board.items.map(item => (
-                <div
-                  key={item.id}
-                  onDragStart={(e) => dragStartHandler(e, board, item)}
-                  onDragOver={(e) => dragOverHandler(e)}
-                  onDrop={(e) => dropHandler(e, board)}
-                  draggable={true}
-                  className="item"
-                >
-                  <div><strong>{item.title}</strong></div>
-                  <div>{item.description}</div>
-                </div>
-              ))}
-            </div>
-          ))}
+            ))}
         </div>
-      );
-};
+    );
+}
+
+
 
 export default Board;
