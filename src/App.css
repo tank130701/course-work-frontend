@@ -111,3 +111,7 @@
 .App, .add-item-form input, .add-item-form textarea, .add-item-form button, .add-item-button {
   font-family: 'Arial', sans-serif; 
 }
+
+.add-item-form textarea{
+  resize: none;
+}
