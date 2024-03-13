@@ -1,7 +1,5 @@
-
-import React, { useState, useContext } from 'react';
+import React, { memo, useState, useContext } from 'react';
 import { Context } from "../index";
-import { observer } from "mobx-react-lite";
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
@@ -14,7 +12,7 @@ const LoginForm = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
                 type="text"
-                placeholder='Email'
+                placeholder='Username'
             />
             <input
                 onChange={(e) => setPassword(e.target.value)}
@@ -32,4 +30,4 @@ const LoginForm = () => {
     );
 };
 
-export default observer(LoginForm);
+export default memo(LoginForm);
