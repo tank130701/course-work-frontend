@@ -1,7 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import AuthService from "../services/AuthService";
-import axios from 'axios';
-import { API_URL } from "../http";
+// import axios from 'axios';
+import $api, { API_URL } from "../http";
 
 export default class Store {
     user = {};
@@ -28,11 +28,15 @@ export default class Store {
         try {
             const response = await AuthService.login(username, password);
             console.log(response)
-            localStorage.setItem('token', response.data.accessToken);
+            localStorage.setItem('accessToken', response.data.accessToken);
+            localStorage.setItem('refreshToken', response.data.refreshToken);
             this.setAuth(true);
             const decodedToken = this.parseJwt(response.data.accessToken);
+
             // console.log(decodedToken);
             this.setUser(decodedToken.user_id);
+
+            
             console.log(decodedToken.user_id)
 
         } catch (e) {
@@ -44,7 +48,7 @@ export default class Store {
         try {
             const response = await AuthService.registration(email, password);
             console.log(response)
-            localStorage.setItem('token', response.data.accessToken);
+            localStorage.setItem('accessToken', response.data.accessToken);
             localStorage.setItem('refreshToken', response.data.refreshToken);
             this.setAuth(true);
             this.setUser(response.data.user);
@@ -56,7 +60,7 @@ export default class Store {
     async logout() {
         try {
             await AuthService.logout();
-            localStorage.removeItem('token');
+            localStorage.removeItem('accessToken');
             this.setAuth(false);
             this.setUser({});
         } catch (e) {
@@ -67,16 +71,17 @@ export default class Store {
     async checkAuth() {
         this.setLoading(true);
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`${API_URL}/auth/refresh`, {
-                headers: { Authorization: `Bearer ${token}` },
+            const response = await $api.get(`${API_URL}/auth/refresh`, {
+                refreshToken: localStorage.getItem('refreshToken')
+            }, {
                 withCredentials: false
             })
             console.log('refresh');
-            console.log(response.data.refreshToken);
+            console.log(response.data.accessToken);
             console.log('refresh');
-            localStorage.setItem('token', response.data.accessToken);
+            localStorage.setItem('accessToken', response.data.accessToken);
             this.setAuth(true);
+            
             const decodedToken = this.parseJwt(response.data.accessToken);
             console.log(decodedToken);
             this.setUser(decodedToken.user_id);

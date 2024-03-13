@@ -10,7 +10,6 @@ function App() {
             <Auth>
                 <Board/>
             </Auth>
-
         </div>
     );
 }

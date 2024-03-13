@@ -6,9 +6,10 @@ const Auth = ({ children }) => {
     const { store } = useContext(Context);
 
     useEffect(() => {
-        if (localStorage.getItem('token')) {
-            console.log(localStorage.getItem('token'))
-            console.log(store.checkAuth())
+        if (localStorage.getItem('accessToken')) {
+            console.log("Проверка в Auth")
+            console.log(localStorage.getItem('accessToken'))
+            store.checkAuth()
         }
     }, [store])
 
@@ -26,9 +27,9 @@ const Auth = ({ children }) => {
 
     return (
         <div>
-            <h1>{store.isAuth ? `User authenticated ${store.user.id}` : 'Please authenticate'}</h1>
+            {/* <h1>{store.isAuth ? `User authenticated ${store.user.id}` : 'Please authenticate'}</h1> */}
             {/*<h1>{store.user.isActivated ? 'Account confirmed by email' : 'PLEASE CONFIRM ACCOUNT!!!!'}</h1>*/}
-            <button onClick={() => store.logout()}>Logout</button>
+            {/* <button onClick={() => store.logout()}>Logout</button> */}
             {children}
         </div>
     );
