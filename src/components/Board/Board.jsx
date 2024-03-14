@@ -1,5 +1,5 @@
 import { useState } from 'react';
-
+import styles from './Board.module.css';
 function Board() {
     const [boards, setBoards] = useState([
         {
@@ -84,11 +84,11 @@ function Board() {
     return (
         <div>{boards.map(board =>
             <div
-                className='board'
+                className={styles.board}
                 onDragOver={(e) => dragOverHandler(e)}
                 onDrop={(e) => dropCardHandler(e, board)}
             >
-                <div className='board__title'>{board.title}</div>
+                <div className={styles.board__title}>{board.title}</div>
                 {
                     board.items.map(
                         item =>
@@ -99,7 +99,7 @@ function Board() {
                                 onDragOver={(e) => dragOverHandler(e)}
                                 onDrop={(e) => dropHandler(e, board, item)}
                                 draggable={true}
-                                className="item"
+                                className={styles.item}
                             >
                                 <div><strong>{item.title}</strong></div>
                                 <div>{item.description}</div>
@@ -109,6 +109,6 @@ function Board() {
             </div>)}
         </div>
     );
-};
+}
 
 export default Board;

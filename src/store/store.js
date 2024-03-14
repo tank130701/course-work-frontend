@@ -1,7 +1,9 @@
 import { makeAutoObservable } from "mobx";
 import AuthService from "../services/AuthService";
+// import { jwtDecode } from 'jwt-decode';
 // import axios from 'axios';
 import $api, { API_URL } from "../http";
+import {jwtDecode} from "jwt-decode";
 
 export default class Store {
     user = {};
@@ -28,17 +30,17 @@ export default class Store {
         try {
             const response = await AuthService.login(username, password);
             console.log(response)
-            localStorage.setItem('accessToken', response.data.accessToken);
-            localStorage.setItem('refreshToken', response.data.refreshToken);
-            this.setAuth(true);
+            localStorage.setItem('token', response.data.accessToken);
+
             const decodedToken = this.parseJwt(response.data.accessToken);
 
             // console.log(decodedToken);
             this.setUser(decodedToken.user_id);
 
-            
             console.log(decodedToken.user_id)
-
+            this.setAuth(true);
+            console.log("Проверка isAuth")
+            console.log(this.isAuth)
         } catch (e) {
             console.log(e.response?.data?.message);
         }
@@ -48,8 +50,7 @@ export default class Store {
         try {
             const response = await AuthService.registration(email, password);
             console.log(response)
-            localStorage.setItem('accessToken', response.data.accessToken);
-            localStorage.setItem('refreshToken', response.data.refreshToken);
+            localStorage.setItem('token', response.data.accessToken);
             this.setAuth(true);
             this.setUser(response.data.user);
         } catch (e) {
@@ -60,7 +61,7 @@ export default class Store {
     async logout() {
         try {
             await AuthService.logout();
-            localStorage.removeItem('accessToken');
+            localStorage.removeItem('token');
             this.setAuth(false);
             this.setUser({});
         } catch (e) {
@@ -71,25 +72,33 @@ export default class Store {
     async checkAuth() {
         this.setLoading(true);
         try {
-            const response = await $api.get(`${API_URL}/auth/refresh`, {
-                refreshToken: localStorage.getItem('refreshToken')
-            }, {
-                withCredentials: false
-            })
-            console.log('refresh');
-            console.log(response.data.accessToken);
-            console.log('refresh');
-            localStorage.setItem('accessToken', response.data.accessToken);
+            const response = await $api.get(`${API_URL}/auth/refresh`);
+            console.log('Проверка в store');
+            console.log(response);
+            console.log('Проверка в store');
+
+            localStorage.setItem('token', response.data.accessToken);
+
             this.setAuth(true);
-            
+
             const decodedToken = this.parseJwt(response.data.accessToken);
             console.log(decodedToken);
             this.setUser(decodedToken.user_id);
         } catch (e) {
             console.log(e.response?.data?.message);
+            this.setAuth(false); // установите isAuth в false при ошибке
         } finally {
             this.setLoading(false);
         }
+    }
+
+    async isAuthenticated() {
+        const token = localStorage.getItem('token');
+        if (!token) return false;
+
+        const decoded = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+        return decoded.exp > currentTime;
     }
 
     parseJwt(token) {

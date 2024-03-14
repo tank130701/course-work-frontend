@@ -1,5 +1,6 @@
 import React, { memo, useState, useContext } from 'react';
-import { Context } from "../index";
+import styles from './LoginForm.module.css';
+import { Context } from "../../index";
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
@@ -7,7 +8,7 @@ const LoginForm = () => {
     const { store } = useContext(Context);
 
     return (
-        <div className="login-form">
+        <div className={styles.loginForm}>
             <input
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
