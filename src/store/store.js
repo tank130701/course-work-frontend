@@ -60,10 +60,11 @@ export default class Store {
 
     async logout() {
         try {
-            await AuthService.logout();
+            const response = await AuthService.logout();
             localStorage.removeItem('token');
             this.setAuth(false);
             this.setUser({});
+            console.log(response)
         } catch (e) {
             console.log(e.response?.data?.message);
         }
@@ -92,7 +93,7 @@ export default class Store {
         }
     }
 
-    async isAuthenticated() {
+    isAuthenticated() {
         const token = localStorage.getItem('token');
         if (!token) return false;
 

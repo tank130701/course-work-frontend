@@ -1,6 +1,7 @@
 // import React, {memo, useContext, useEffect} from 'react';
-// import LoginForm from "./LoginForm";
-// import {Context} from "../index";
+//
+// import {Context} from "../../index";
+// import LoginForm from "../LoginForn/LoginForm";
 //
 // const Auth = ({ children }) => {
 //     const { store } = useContext(Context);
