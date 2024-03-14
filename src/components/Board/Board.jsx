@@ -212,7 +212,7 @@ return (
            />
            
             ) : (
-              <div onClick={() => handleEditTitle(board.id, item.id)}><strong>{item.title}</strong></div>
+              <div onClick={() => handleEditTitle(board.id, item.id)} className={styles['item-title']}><strong>{item.title}</strong></div>
             )}
             {item.isEditingDescription ? (
          <textarea
