@@ -30,9 +30,9 @@ function App() {
     return (
         <Router>
             <Routes>
-                <Route path={'/'} element={store.isAuthenticated() ? <Board /> : <LoginForm /> }/>
-                {<Route path='/login' element={<LoginForm />}/>}
-                {<Route path='/board' element={<Board />} />}
+            <Route path={'/'} element={ <Board />}/>
+                {/*<Route path='/login' element={<LoginForm />}/>}
+                {<Route path='/board' element={<Board />} />/*}
                 {/*<Route path="/" element={store.isAuthenticated() ? <Navigate to="/board" /> : <LoginForm />} />*/}
                 {/*<Route path="/board" element={!store.isAuth ? <Navigate to="/" /> : <Board />} />*/}
             </Routes>
