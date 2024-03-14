@@ -1,5 +1,5 @@
-import Board from './components/Board';
-import './components/Board.components.css'
+import Board from './components/Board/Board';
+import './components/Board/Board.components.css'
 import './App.css';
 
 
