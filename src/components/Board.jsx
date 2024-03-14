@@ -69,19 +69,16 @@ function Board() {
   
       
       const handleInputChange = (e, boardId, itemId, field) => {
-        let newValue = e.target.value;
-      
-        if (newValue.endsWith("\n")) {
-          newValue = newValue.slice(0, -1);
-        }
-      
+        const newValue = e.target.value;
+    
         const fieldName = field === 'title' ? 'title' : 'description';
         updateItemState(boardId, itemId, { [fieldName]: newValue });
-      
+    
+        // Динамическая корректировка высоты textarea
         e.target.style.height = 'auto';
-        e.target.style.height = `${e.target.scrollHeight}px`;
-      };
-      
+        e.target.style.height = `${Math.max(e.target.scrollHeight, 48)}px`; // 48px примерная высота двух строк текста
+    };
+
       const handleBlurSaveTitle = (boardId, itemId) => {
         const item = boards.find(board => board.id === boardId)?.items.find(item => item.id === itemId);
         if (item) {
@@ -124,11 +121,10 @@ function Board() {
 
    
 
-    const handleInput = (e) => {
-      const textarea = e.target;
-      textarea.style.height = 'auto'; 
-      textarea.style.height = `${textarea.scrollHeight}px`; 
-    };
+   const handleInput = (e) => {
+    e.target.style.height = 'auto';
+    e.target.style.height = `${Math.max(e.target.scrollHeight, 48)}px`; // Обеспечиваем минимальную высоту для двух строк
+};
     
     
     
