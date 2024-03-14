@@ -1,10 +1,10 @@
 import {useContext, useState} from 'react';
-import {Context} from "../../index";
+import {Context, store} from "../../index";
 import {useNavigate} from "react-router-dom";
 import styles from './Board.module.css';
 
 function Board() {
-  
+    const navigate = useNavigate();
     const [boards, setBoards] = useState([
       {
         id: 1,
@@ -189,6 +189,12 @@ setBoards(boards => boards.map(board => {
 
 return (
 <div className={styles.boardContainer}>
+    <button onClick={() => {
+        store.logout()
+        // if (!store.isAuth) {
+            navigate("/login");
+        // }
+    }}>Logout</button>
   {boards.map((board) => (
     <div className={styles.board} key={board.id} onDragOver={(e) => dragOverHandler(e, board)} onDrop={(e) => dropHandler(e, board)}>
       <div className={styles.board__title}>{board.title}</div>
