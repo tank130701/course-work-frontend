@@ -1,3 +1,4 @@
+import Board from './components/Board';
 import React from 'react';
 import Auth from './components/Auth';
 import { BrowserRouter as Router, Route, Navigate, Routes } from 'react-router-dom';
