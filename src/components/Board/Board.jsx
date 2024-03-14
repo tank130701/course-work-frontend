@@ -1,4 +1,5 @@
 import {useContext, useState} from 'react';
+import TextareaAutosize from 'react-textarea-autosize';
 import {Context} from "../../index";
 import {useNavigate} from "react-router-dom";
 import styles from './Board.module.css';
@@ -35,12 +36,9 @@ function Board() {
 
     const [currentBoard, setCurrentBoard] = useState(null);
     const [currentItem, setCurrentItem] = useState(null);
-    const [newTitle, setNewTitle] = useState('');
-    const [newDescription, setNewDescription] = useState('');
-    const [addingNewItem, setAddingNewItem] = useState({});
+ 
     const [hoveredItem, setHoveredItem] = useState(null);
-    const [editItemId, setEditItemId] = useState(null); 
-    const [tempItemId, setTempItemId] = useState(null);
+
 
     
 
@@ -77,9 +75,7 @@ function Board() {
       const fieldName = field === 'title' ? 'title' : 'description';
       updateItemState(boardId, itemId, { [fieldName]: newValue });
   
-      // Динамическая корректировка высоты textarea
-      e.target.style.height = 'auto';
-      e.target.style.height = `${Math.max(e.target.scrollHeight, 48)}px`; // 48px примерная высота двух строк текста
+     
   };
 
     const handleBlurSaveTitle = (boardId, itemId) => {
@@ -98,8 +94,6 @@ function Board() {
     
 
 
-
- 
 
   const handleAddNewItem = (boardId) => {
       const newCard = { id: Date.now(), title: 'Название задачи', description: 'Описание задачи', isEditing: true };
@@ -123,17 +117,6 @@ function Board() {
   };
 
  
-
- const handleInput = (e) => {
-  e.target.style.height = 'auto';
-  e.target.style.height = `${Math.max(e.target.scrollHeight, 48)}px`; // Обеспечиваем минимальную высоту для двух строк
-};
-  
-  
-  
-
-
-
 
     function dragStartHandler(e, board, item) {
       setCurrentBoard(board);
@@ -184,6 +167,10 @@ setBoards(boards => boards.map(board => {
   return board;
 }));
 };
+
+
+
+
   
 
 
@@ -200,30 +187,39 @@ return (
             onDragStart={(e) => dragStartHandler(e, board, item)}
             className={`${styles.item} ${item === hoveredItem ? styles.hovered : ''}`}
           >
-            {item.isEditingTitle ? (
-             <input
-             autoFocus
-             type="text"
-             value={item.title}
-             onChange={(e) => handleInputChange(e, board.id, item.id, 'title')}
-             onBlur={() => handleBlurSaveTitle(board.id, item.id, item.title)}
-             onKeyDown={(e) => e.key === 'Enter' && handleBlurSaveTitle(board.id, item.id, item.title)}
-             className={styles['item-edit-form-input']} 
-           />
-           
-            ) : (
-              <div onClick={() => handleEditTitle(board.id, item.id)} className={styles['item-title']}><strong>{item.title}</strong></div>
-            )}
+
+
+          {item.isEditingTitle ? (
+            <TextareaAutosize
+              autoFocus
+              value={item.title}
+              onFocus={handleFocus}
+              onChange={(e) => handleInputChange(e, board.id, item.id, 'title')}
+              onBlur={() => handleBlurSaveTitle(board.id, item.id, item.title)}
+              className={styles['item-edit-form-input']}
+              minRows={0}
+            />
+          ) : (
+            <div 
+              className={styles["item-title"]}
+              onClick={() => handleEditTitle(board.id, item.id)} 
+              style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
+            >
+              {item.title}
+            </div>
+          )}
+
+
+
             {item.isEditingDescription ? (
-         <textarea
+         <TextareaAutosize
          autoFocus
          value={item.description}
          onChange={(e) => handleInputChange(e, board.id, item.id, 'description')}
          onBlur={() => handleBlurSaveDescription(board.id, item.id)}
-         onInput={handleInput}
          onFocus={handleFocus}
          className={styles["item-edit-form-textarea"]}
-       ></textarea>
+         />
        
          
           ) : (
