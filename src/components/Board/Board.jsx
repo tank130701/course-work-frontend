@@ -183,7 +183,7 @@ const handleDeleteItem = (boardId, itemId) => {
 
 
 return (
-  <div className="App">
+  <div className={styles.board}>
       <button onClick={() => {
           store.logout()
           if (!store.isAuth) {
