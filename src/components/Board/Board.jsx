@@ -75,9 +75,7 @@ function Board() {
       
         updateItemState(boardId, itemId, updates);
       };
-      
-  
-      
+
       const handleInputChange = (e, boardId, itemId, field) => {
         let newValue = e.target.value;
       
@@ -105,20 +103,12 @@ function Board() {
           handleSaveItem(boardId, itemId, item.title, item.description, 'description');
         }
       };
-      
-
-
-
-   
 
     const handleAddNewItem = (boardId) => {
         const newCard = { id: Date.now(), title: 'Название задачи', description: 'Описание задачи', isEditing: true };
         const updatedBoards = boards.map(board => board.id === boardId ? { ...board, items: [...board.items, newCard] } : board);
         setBoards(updatedBoards);
     };
-
-
-
 
     const updateItemState = (boardId, itemId, updates) => {
         const updatedBoards = boards.map(board =>
