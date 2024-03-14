@@ -1,4 +1,5 @@
 import Board from './components/Board';
+import './components/Board.components.css'
 import './App.css';
 
 
