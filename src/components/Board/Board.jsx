@@ -1,37 +1,14 @@
-import {useContext, useState} from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import {Context} from "../../index";
 import {useNavigate} from "react-router-dom";
 import styles from './Board.module.css';
+import { boardsData } from '../Categories/Categories_base';
 
-function Board() {
+
+function Board({ category }){
   
-    const [boards, setBoards] = useState([
-      {
-        id: 1,
-        title: "Todo",
-        items: [
-          { id: 1, title: 'Код Ревью', description: 'Проверить новые PRs', isEditing: false},
-          { id: 2, title: 'Выкинуть мусор', description: 'Взять мусорные пакеты из-под раковины', isEditingTitle: false, isEditingDescription: false }
-        ]
-      },
-      {
-        id: 2,
-        title: "In Progress",
-        items: [
-          { id: 3, title: 'Код Ревью', description: 'Оставить комментарии', isEditing: false },
-          { id: 4, title: 'Выкинуть мусор', description: 'Не забыть разделить перерабатываемые отходы', isEditingTitle: false, isEditingDescription: false }
-        ]
-      },
-      {
-        id: 3,
-        title: "Complete",
-        items: [
-          { id: 5, title: 'Код Ревью', description: 'Все задачи проверены', isEditingTitle: false, isEditingDescription: false },
-          { id: 6, title: 'Выкинуть мусор', description: 'Мусор успешно выкинут' , isEditingTitle: false, isEditingDescription: false }
-        ]
-      }
-    ]);
+  const [boards, setBoards] = useState(category.boards);
   
 
     const [currentBoard, setCurrentBoard] = useState(null);
@@ -39,6 +16,10 @@ function Board() {
  
     const [hoveredItem, setHoveredItem] = useState(null);
 
+
+    useEffect(() => {
+      setBoards(category.boards);
+    }, [category]); 
 
     
 
@@ -175,7 +156,9 @@ setBoards(boards => boards.map(board => {
 
 
 return (
-<div className={styles.boardContainer}>
+<div className={styles.mainContainer}>
+            <div className={styles.categoryTitle}>{category.title}</div>
+            <div className={styles.boardContainer}>
   {boards.map((board) => (
     <div className={styles.board} key={board.id} onDragOver={(e) => dragOverHandler(e, board)} onDrop={(e) => dropHandler(e, board)}>
       <div className={styles.board__title}>{board.title}</div>
@@ -240,6 +223,7 @@ return (
       </div>
     </div>
   ))}
+</div>
 </div>
 );
 

@@ -1,0 +1,70 @@
+.panel{
+  display: flex;
+  flex-direction: column;
+  width: 18%;
+  height: 100vh;
+  overflow: auto;
+  background-color: #f0f4f8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+
+.edit-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #007bff; 
+  padding: 5px;
+  margin: 0 5px;
+  outline: none;
+}
+
+.edit-button:hover {
+  color: #0056b3; 
+  text-decoration: underline; 
+}
+
+
+.delete-item-button {
+  position: absolute;
+  top: 5px;
+  left: 80%;
+  width: 15%;
+  margin-bottom: 10px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  background-color: transparent;
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.delete-item-button:before {
+  content: "\2715";
+  display: inline-block;
+  margin-right: 5px;
+  font-size: 16px;
+}
+
+.delete-item-button:hover{
+  text-decoration: underline; 
+  color: #b4323f;
+}
+
+
+.category{
+  padding: 10px;
+  cursor: pointer;
+  position: relative;
+  width: 80%;
+  background-color: #DEDADA;
+  margin-top: 5px;
+  margin-left: 7px;
+  margin-bottom: 5px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
