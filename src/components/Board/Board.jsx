@@ -44,6 +44,7 @@ function Board({selectedCategoryId}) {
 
   useEffect(() => {
     if (selectedCategoryId) {
+      setTasks([]);
       refetch();
     }
   }, [selectedCategoryId, refetch]);
