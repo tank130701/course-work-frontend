@@ -5,10 +5,11 @@ import AuthService from "../services/AuthService";
 import $api, { API_URL } from "../http";
 import {jwtDecode} from "jwt-decode";
 
-export default class Store {
+class Store {
     user = {};
     isAuth = false;
-    isLoading = false;
+    isLoading = true;
+    categoryId = 0;
 
     constructor() {
         makeAutoObservable(this);
@@ -24,6 +25,15 @@ export default class Store {
 
     setLoading(bool) {
         this.isLoading = bool;
+    }
+
+    setCategory(categoryId) {
+        this.categoryId = categoryId
+        localStorage.setItem('selectedCategoryId', categoryId);
+    }
+
+    getCategory(){
+        return localStorage.getItem('selectedCategoryId')
     }
 
     async login(username, password) {
@@ -110,5 +120,6 @@ export default class Store {
         }).join(''));
 
         return JSON.parse(jsonPayload);
-    };
+    }
 }
+export default Store;

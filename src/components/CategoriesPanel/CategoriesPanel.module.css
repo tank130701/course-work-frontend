@@ -1,0 +1,122 @@
+.panel{
+  display: flex;
+  flex-direction: column;
+  width: 18%;
+  overflow: auto;
+  background-color: #f0f4f8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+
+.edit-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #007bff; 
+  outline: none;
+}
+
+
+.edit-button:hover {
+  color: #0056b3; 
+  text-decoration: underline; 
+}
+
+.delete-item-button {
+  left: 80%;
+  width: 15%;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  background-color: transparent;
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.delete-item-button:before {
+  content: "\2715";
+  display: inline-block;
+  margin-right: 5px;
+  font-size: 16px;
+}
+
+.delete-item-button:hover{
+  text-decoration: underline; 
+  color: #b4323f;
+}
+
+.buttons{
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.category{
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  background-color: #DEDADA;
+  margin-top: 5px;
+  margin-left: 7px;
+  margin-bottom: 5px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.category_txt{
+  font-size: 16px;
+  margin-left: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  max-width: 50%;
+}
+
+.category-input{
+  background-color: #DEDADA;
+  font-size: 16px; 
+  border: 0px solid transparent;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  overflow-y: hidden;
+  background-color: #DEDADA;
+  border: none;
+  outline: none;
+  resize: none;
+  vertical-align: top;
+  margin-top: 5px;
+  margin-left: 7px;
+  margin-bottom: 5px;
+  border-radius: 8px;
+  width: 90%;
+}
+
+.new_category_button{
+    display: flex;
+    margin-left: 30%;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 30px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 10%;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+
+
+.selectedCategory {
+  background-color: #a4bfe0; 
+}
+
+
+.category:active {
+
+  transform: scale(0.98); /* Уменьшает размер категории при нажатии */
+  transition: transform 0.1s ease; /* Добавляет плавность анимации */
+}
