@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 // import { Context } from "../../index";
 
 import styles from "./Board.module.css";
+import CategoriesService from "../../services/CategoriesService";
 
 
 function Board({selectedCategoryId}) {
@@ -11,7 +12,7 @@ function Board({selectedCategoryId}) {
 
   // const { store } = useContext(Context);
   const [tasks, setTasks] = useState([]);
-
+  const [categoryTitle, setCategoryTitle] = useState('');
   // console.log("Board", selectedCategoryId)
 
   
@@ -26,6 +27,20 @@ function Board({selectedCategoryId}) {
         setTasks(data.data)
       },
 
+      onError: err => {
+        console.log(err)
+      }
+    }
+  );
+
+  const { isLoading: isCategoryLoading } = useQuery(
+    ['fetchCategory', selectedCategoryId],
+    () => CategoriesService.GetById(selectedCategoryId),
+    {
+      enabled: !!selectedCategoryId,
+      onSuccess: (data) => {
+        setCategoryTitle(data.data.name);
+      },
       onError: err => {
         console.log(err)
       }
@@ -150,8 +165,9 @@ function Board({selectedCategoryId}) {
 
   return (
     <div className={styles.board__container}>
+      <h1>{categoryTitle}</h1>
       {
-        isItemsLoading ? <div> Loading </div> :
+        isItemsLoading && isCategoryLoading ? <div> Loading </div> :
         boards.map(board =>
         <div
           key={board.id}
