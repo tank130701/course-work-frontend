@@ -1,58 +1,55 @@
-import ItemsService from "../../services/ItemsService";
 import React, { useEffect, useState } from 'react';
-import { useQuery } from "react-query";
-// import { Context } from "../../index";
-
-import styles from "./Board.module.css";
+import { useQuery, useMutation } from "react-query";
+import ItemsService from "../../services/ItemsService";
 import CategoriesService from "../../services/CategoriesService";
-
+import styles from "./Board.module.css";
 
 function Board({selectedCategoryId}) {
-
-
-  // const { store } = useContext(Context);
   const [tasks, setTasks] = useState([]);
   const [categoryTitle, setCategoryTitle] = useState('');
-  // console.log("Board", selectedCategoryId)
 
-  
   const { isLoading: isItemsLoading, refetch } = useQuery(
-    ['fetchItems', selectedCategoryId],
-    () => ItemsService.GetAll(selectedCategoryId),
-    {
-      enabled :!! selectedCategoryId,
-      onSuccess: (data) => {
-        console.log('data')
-        console.log(data.data)
-        setTasks(data.data)
-      },
-
-      onError: err => {
-        console.log(err)
+      ['fetchItems', selectedCategoryId],
+      () => ItemsService.GetAll(selectedCategoryId),
+      {
+        enabled: !!selectedCategoryId,
+        onSuccess: (data) => {
+          console.log('data:', data.data);
+          setTasks(data.data);
+        },
+        onError: err => {
+          console.log(err);
+        }
       }
-    }
   );
 
   const { isLoading: isCategoryLoading } = useQuery(
-    ['fetchCategory', selectedCategoryId],
-    () => CategoriesService.GetById(selectedCategoryId),
-    {
-      enabled: !!selectedCategoryId,
-      onSuccess: (data) => {
-        setCategoryTitle(data.data.name);
-      },
-      onError: err => {
-        console.log(err)
+      ['fetchCategory', selectedCategoryId],
+      () => CategoriesService.GetById(selectedCategoryId),
+      {
+        enabled: !!selectedCategoryId,
+        onSuccess: (data) => {
+          setCategoryTitle(data.data.name);
+        },
+        onError: err => {
+          console.log(err)
+        }
       }
-    }
   );
-  
-  useEffect(() => {
-    refetch()
-    console.log("Board", selectedCategoryId)
-  }, [selectedCategoryId]); // Следим за состоянием загрузки и выбранной  
 
-  
+  const updateItemMutation = useMutation((newStatus) => {
+    return ItemsService.Update(currentItem.id, currentItem.title, currentItem.description, newStatus);
+  });
+
+
+  useEffect(() => {
+    if (selectedCategoryId) {
+      refetch();
+    }
+  }, [selectedCategoryId, refetch]);
+
+
+
   const [boards, setBoards] = useState([])
 
   useEffect(() => {
@@ -61,16 +58,16 @@ function Board({selectedCategoryId}) {
       const inProgressItems = tasks.filter(task => task.status === 'in_progress');
       const completedItems = tasks.filter(task => task.status === 'completed');
       setBoards(
-        [
-          { id: 1, title: "Todo", items: todoItems },
-          { id: 2, title: "in Progress", items: inProgressItems },
-          { id: 3, title: "Complete", items: completedItems },
-        ]
+          [
+            { id: 1, title: "Todo", items: todoItems },
+            { id: 2, title: "in Progress", items: inProgressItems },
+            { id: 3, title: "Complete", items: completedItems },
+          ]
       )
     }
     refetch()
-    
-  }, [tasks]); // Следим за состоянием загрузки и выбранной  
+
+  }, [tasks]); // Следим за состоянием загрузки и выбранной
 
 
   console.log("Boards", boards)
@@ -105,15 +102,15 @@ function Board({selectedCategoryId}) {
     const dropIndex = board.items.indexOf(item)
     board.items.splice(dropIndex + 1, 0, currentItem)
     setBoards(boards.map(
-      b => {
-        if (b.id === board.id) {
-          return board
-        }
-        if (b.id === currentBoard.id) {
-          return currentBoard
-        }
-        return b
-      }))
+        b => {
+          if (b.id === board.id) {
+            return board
+          }
+          if (b.id === currentBoard.id) {
+            return currentBoard
+          }
+          return b
+        }))
     e.target.style.boxShadow = 'none'
     console.log("drop")
   }
@@ -122,7 +119,6 @@ function Board({selectedCategoryId}) {
     board.items.push(currentItem);
     const currentIndex = currentBoard.items.indexOf(currentItem);
     currentBoard.items.splice(currentIndex, 1);
-    
     // Обновляем состояние доски после перемещения карточки
     setBoards(boards.map(b => {
       if (b.id === board.id) {
@@ -133,10 +129,10 @@ function Board({selectedCategoryId}) {
       }
       return b;
     }));
-  
+
     // Убираем тень после окончания перемещения
     e.target.style.boxShadow = 'none';
-  
+
     // Обновляем статус карточки в соответствии с новой колонкой, в которую она была перемещена
     let newStatus;
     switch (board.title.toLowerCase()) {
@@ -152,52 +148,54 @@ function Board({selectedCategoryId}) {
       default:
         newStatus = currentItem.status; // Если колонка не распознана, статус остается прежним
     }
-  
-    // Обновляем статус карточки
-    ItemsService.Update(currentItem.id, currentItem.title, currentItem.description, newStatus)
-      .then(() => {
+
+    // Обновляем статус карточки через мутацию
+    updateItemMutation.mutate(newStatus, {
+      onSuccess: () => {
         console.log('Card status updated successfully');
-      })
-      .catch(error => {
+        setCurrentBoard(board);
+      },
+      onError: (error) => {
         console.error('Error updating card status:', error);
-      });
+      }
+    });
   }
 
   return (
-    <div className={styles.board__container}>
-      <h1>{categoryTitle}</h1>
-      {
-        isItemsLoading && isCategoryLoading ? <div> Loading </div> :
-        boards.map(board =>
-        <div
-          key={board.id}
-          className={styles.board}
-          onDragOver={(e) => dragOverHandler(e)}
-          onDrop={(e) => dropCardHandler(e, board)}
-        >
-          <div className={styles.board__title}>{board.title}</div>
-          { 
-            selectedCategoryId &&
-            board.items.map(
-              item =>
-                <div
-                  key={item.id}
-                  onDragStart={(e) => dragStartHandler(e, board, item)}
-                  onDragLeave={(e) => dragLeaveHandler(e)}
-                  onDragEnd={(e) => dragEndHandler(e)}
-                  onDragOver={(e) => dragOverHandler(e)}
-                  onDrop={(e) => dropHandler(e, board, item)}
-                  draggable={true}
-                  className={styles.item}
-                >
-                  <div><strong>{item.title}</strong></div>
-                  <div>{item.description}</div>
-                </div>
-            )
-          }
-        </div>
-      )}
-    </div>
+      <div className={styles.board__container}>
+        <h1>{categoryTitle}</h1>
+        {
+          isItemsLoading && isCategoryLoading ? <div> Loading </div> :
+              boards.map(board =>
+                  <div
+                      key={board.id}
+                      className={styles.board}
+                      onDragOver={(e) => dragOverHandler(e)}
+                      onDrop={(e) => dropCardHandler(e, board)}
+                  >
+                    <div className={styles.board__title}>{board.title}</div>
+                    {
+                        selectedCategoryId &&
+                        board.items.map(
+                            item =>
+                                <div
+                                    key={item.id}
+                                    onDragStart={(e) => dragStartHandler(e, board, item)}
+                                    onDragLeave={(e) => dragLeaveHandler(e)}
+                                    onDragEnd={(e) => dragEndHandler(e)}
+                                    onDragOver={(e) => dragOverHandler(e)}
+                                    onDrop={(e) => dropHandler(e, board, item)}
+                                    draggable={true}
+                                    className={styles.item}
+                                >
+                                  <div><strong>{item.title}</strong></div>
+                                  <div>{item.description}</div>
+                                </div>
+                        )
+                    }
+                  </div>
+              )}
+      </div>
   );
 }
 
