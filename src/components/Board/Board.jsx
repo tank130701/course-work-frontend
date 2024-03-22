@@ -1,4 +1,3 @@
-// Board.jsx
 import React, { useState } from 'react';
 import { useQuery, useMutation } from 'react-query';
 import ItemsService from "../../services/ItemsService";
@@ -46,14 +45,11 @@ function Board({ selectedCategoryId }) {
 
 const updateItemMutation = useMutation(itemsData => ItemsService.Update(itemsData.id, itemsData.title, itemsData.description, itemsData.status), {
   onSuccess: (data, variables) => {
-    // Обновляем только измененную задачу в локальном состоянии
     const updatedTasks = tasks.map(task => 
       task.id === variables.id ? {...task, ...variables} : task
     );
     setTasks(updatedTasks);
     console.log("Item updated successfully");
-
-    // Сбрасываем состояние редактирования
     setEditingItemId(null);
     setCurrentEditingField(null);
   },
@@ -115,14 +111,14 @@ const deleteItemMutation = useMutation((id) => ItemsService.Delete(id), {
     setEditingItemId(item.id);
     const currentItem = tasks.find(task => task.id === item.id);
     setEditingTitle(currentItem.title);
-    setEditingDescription(currentItem.description); // На случай, если пользователь решит редактировать описание
+    setEditingDescription(currentItem.description); 
   };
   
   const handleEditDescription = (item) => {
     setCurrentEditingField('description');
     setEditingItemId(item.id);
     const currentItem = tasks.find(task => task.id === item.id);
-    setEditingTitle(currentItem.title); // На случай, если пользователь решит редактировать заголовок
+    setEditingTitle(currentItem.title); 
     setEditingDescription(currentItem.description);
   };
   
@@ -143,13 +139,11 @@ const deleteItemMutation = useMutation((id) => ItemsService.Delete(id), {
         status: updatedTask.status,
       }, {
         onSuccess: () => {
-          // После успешного обновления на сервере, обновляем задачу в локальном состоянии
           const updatedTasks = tasks.map(task =>
             task.id === id ? { ...task, ...updatedTask } : task
           );
           setTasks(updatedTasks);
   
-          // Сбрасываем состояние редактирования
           setEditingItemId(null);
           setCurrentEditingField(null);
         }

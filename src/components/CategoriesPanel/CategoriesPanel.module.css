@@ -129,6 +129,6 @@
 
 .category:active {
 
-  transform: scale(0.98); /* Уменьшает размер категории при нажатии */
-  transition: transform 0.1s ease; /* Добавляет плавность анимации */
+  transform: scale(0.98); 
+  transition: transform 0.1s ease; 
 }

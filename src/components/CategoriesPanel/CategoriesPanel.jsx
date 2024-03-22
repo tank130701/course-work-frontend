@@ -12,9 +12,9 @@ function CategoriesPanel ( {selectedCategoryId, setSelectedCategoryId} ) {
   const queryClient = useQueryClient();
 
   const { data: categories, isLoading } = useQuery('categories', CategoriesService.GetAll, {
-    select: data => data?.data, // Использование опциональной цепочки для предотвращения ошибок
+    select: data => data?.data, 
     onSuccess: data => {
-      if (data && data.length > 0) { // Добавлена проверка на наличие данных и их количества
+      if (data && data.length > 0) { 
         console.log("Fetched Categories", data[0].id);
         if (store.getCategory() === 0) {
           handleSelectCategory(data[0].id);
@@ -23,10 +23,10 @@ function CategoriesPanel ( {selectedCategoryId, setSelectedCategoryId} ) {
         }
       } else {
         console.log("No categories fetched or categories are empty");
-        setSelectedCategoryId(null); // Обрабатываем случай, когда категории отсутствуют
-        // Можно также установить некоторое состояние, чтобы отобразить сообщение пользователю
+        setSelectedCategoryId(null); 
+       
       }
-      store.setLoading(false); // Конец загрузки
+      store.setLoading(false); 
       console.log("Store", store);
     }
   });
@@ -34,21 +34,18 @@ function CategoriesPanel ( {selectedCategoryId, setSelectedCategoryId} ) {
 
   const mutation = useMutation(newTitle => CategoriesService.Update(editingCategory, newTitle), {
     onSuccess: () => {
-      // Invalidate and refetch
       queryClient.invalidateQueries('categories');
     },
   });
 
   const createCategoryMutation = useMutation(() => CategoriesService.Create("Новая категория"), {
     onSuccess: () => {
-      // Invalidate and refetch
       queryClient.invalidateQueries('categories');
     },
   });
 
   const deleteCategoryMutation = useMutation(id => CategoriesService.Delete(id), {
     onSuccess: () => {
-      // Invalidate and refetch
       queryClient.invalidateQueries('categories');
     },
   });
