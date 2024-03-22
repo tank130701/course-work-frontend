@@ -3,9 +3,13 @@ import React, { useState } from 'react';
 import { useQuery, useMutation } from 'react-query';
 import ItemsService from "../../services/ItemsService";
 import styles from "./Board.module.css";
+import CategoriesService from "../../services/CategoriesService";
+
 
 function Board({ selectedCategoryId }) {
   const [tasks, setTasks] = useState([]);
+  const [categoryTitle, setCategoryTitle] = useState('');
+
 
   const { isLoading, refetch } = useQuery(['fetchItems', selectedCategoryId], () => ItemsService.GetAll(selectedCategoryId), {
     enabled: !!selectedCategoryId,
@@ -13,6 +17,20 @@ function Board({ selectedCategoryId }) {
       setTasks(data.data);
     },
   });
+
+  const { isLoading: isCategoryLoading } = useQuery(
+    ['fetchCategory', selectedCategoryId],
+    () => CategoriesService.GetById(selectedCategoryId),
+    {
+      enabled: !!selectedCategoryId,
+      onSuccess: (data) => {
+        setCategoryTitle(data.data.name);
+      },
+      onError: err => {
+        console.log(err)
+      }
+    }
+);
 
   const createItemMutation = useMutation(({ categoryId, title, description, status }) => {
     console.log("Creating item with status:", status); 
@@ -143,8 +161,8 @@ const deleteItemMutation = useMutation((id) => ItemsService.Delete(id), {
 
   return (
     <div className={styles["mainContainer"]}>
-      <div className={styles["categoryTitle"]}>Tasks</div>
-      {isLoading ? (
+      <h1 className={styles["categoryTitle"]}>{categoryTitle}</h1>
+      {isLoading && isCategoryLoading ? (
         <div>Loading...</div>
       ) : (
         <div className={styles["boardContainer"]}>
