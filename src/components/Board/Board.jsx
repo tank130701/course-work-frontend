@@ -31,42 +31,42 @@ function Board({ selectedCategoryId }) {
         console.log(err)
       }
     }
-);
+  );
 
   const createItemMutation = useMutation(({ categoryId, title, description, status }) => {
-    console.log("Creating item with status:", status); 
+    console.log("Creating item with status:", status);
     return ItemsService.Create(categoryId, title, description, status);
-}, {
+  }, {
     onSuccess: () => {
-        console.log("Item created. Refetching...");
-        refetch();
+      console.log("Item created. Refetching...");
+      refetch();
     },
-});
+  });
 
-const updateItemMutation = useMutation(itemsData => ItemsService.Update(itemsData.id, itemsData.title, itemsData.description, itemsData.status), {
-  onSuccess: (data, variables) => {
-    const updatedTasks = tasks.map(task => 
-      task.id === variables.id ? {...task, ...variables} : task
-    );
-    setTasks(updatedTasks);
-    console.log("Item updated successfully");
-    setEditingItemId(null);
-    setCurrentEditingField(null);
-  },
-  onError: (error) => {
-    console.error("Error updating item:", error);
-  },
-});
-
-
+  const updateItemMutation = useMutation(itemsData => ItemsService.Update(itemsData.id, itemsData.title, itemsData.description, itemsData.status), {
+    onSuccess: (data, variables) => {
+      const updatedTasks = tasks.map(task =>
+        task.id === variables.id ? { ...task, ...variables } : task
+      );
+      setTasks(updatedTasks);
+      console.log("Item updated successfully");
+      setEditingItemId(null);
+      setCurrentEditingField(null);
+    },
+    onError: (error) => {
+      console.error("Error updating item:", error);
+    },
+  });
 
 
-const deleteItemMutation = useMutation((id) => ItemsService.Delete(id), {
-  onSuccess: () => {
-    console.log("Item deleted. Refetching...");
-    refetch();
-  },
-});
+
+
+  const deleteItemMutation = useMutation((id) => ItemsService.Delete(id), {
+    onSuccess: () => {
+      console.log("Item deleted. Refetching...");
+      refetch();
+    },
+  });
 
 
 
@@ -111,17 +111,17 @@ const deleteItemMutation = useMutation((id) => ItemsService.Delete(id), {
     setEditingItemId(item.id);
     const currentItem = tasks.find(task => task.id === item.id);
     setEditingTitle(currentItem.title);
-    setEditingDescription(currentItem.description); 
+    setEditingDescription(currentItem.description);
   };
-  
+
   const handleEditDescription = (item) => {
     setCurrentEditingField('description');
     setEditingItemId(item.id);
     const currentItem = tasks.find(task => task.id === item.id);
-    setEditingTitle(currentItem.title); 
+    setEditingTitle(currentItem.title);
     setEditingDescription(currentItem.description);
   };
-  
+
 
   const handleSave = async (id) => {
     const updatedTask = {
@@ -130,7 +130,7 @@ const deleteItemMutation = useMutation((id) => ItemsService.Delete(id), {
       description: editingDescription,
       status: tasks.find(task => task.id === id).status,
     };
-  
+
     try {
       await updateItemMutation.mutateAsync({
         id: updatedTask.id,
@@ -143,7 +143,7 @@ const deleteItemMutation = useMutation((id) => ItemsService.Delete(id), {
             task.id === id ? { ...task, ...updatedTask } : task
           );
           setTasks(updatedTasks);
-  
+
           setEditingItemId(null);
           setCurrentEditingField(null);
         }
@@ -152,17 +152,17 @@ const deleteItemMutation = useMutation((id) => ItemsService.Delete(id), {
       console.error("Failed to update task:", error);
     }
   };
-  
-  
-  
-  
-  
+
+
+
+
+
 
   const handleAutoResize = (e) => {
     e.target.style.height = "auto";
     e.target.style.height = e.target.scrollHeight + "px";
   };
-  
+
 
   const handleFocus = (e) => {
     const value = e.target.value;
@@ -171,7 +171,7 @@ const deleteItemMutation = useMutation((id) => ItemsService.Delete(id), {
     e.target.value = '';
     e.target.value = value;
   };
-  
+
 
   return (
     <div className={styles["mainContainer"]}>
@@ -189,73 +189,73 @@ const deleteItemMutation = useMutation((id) => ItemsService.Delete(id), {
             >
               <div className={styles["board__title"]}>{board.title}</div>
               {tasks && tasks.filter(task => task.status === board.status).map((item) => (
-              <div
-                key={item.id}
-                draggable={editingItemId !== item.id} 
-                onDragStart={(e) => handleDragStart(e, item)}
-                className={styles["item"]}
-              >
-               {editingItemId === item.id ? (
-             <>
+                <div
+                  key={item.id}
+                  draggable={editingItemId !== item.id}
+                  onDragStart={(e) => handleDragStart(e, item)}
+                  className={styles["item"]}
+                >
+                  {editingItemId === item.id ? (
+                    <>
+                      <div className={styles["item-content"]}>
+                        {currentEditingField === 'title' ? (
+                          <TextareaAutosize
+                            minRows={1}
+                            value={editingTitle}
+                            onChange={(e) => setEditingTitle(e.target.value)}
+                            onBlur={() => handleSave(item.id)}
+                            onInput={handleAutoResize}
+                            className={styles["item-edit-form-input"]}
+                            autoFocus
+                            onFocus={handleFocus}
+                          />
+                        ) : (
+                          <div className={styles["item-title"]}>
+                            {editingTitle}
+                          </div>
+                        )}
+                        {currentEditingField === 'description' ? (
+                          <TextareaAutosize
+                            minRows={1}
+                            value={editingDescription}
+                            onChange={(e) => setEditingDescription(e.target.value)}
+                            onBlur={() => handleSave(item.id)}
+                            onInput={handleAutoResize}
+                            className={styles["item-edit-form-textarea"]}
+                            autoFocus
+                            onFocus={handleFocus}
+                          />
+                        ) : (
+                          <div className={styles["item-description"]}>
+                            {editingDescription}
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  ) : (
                     <div className={styles["item-content"]}>
-                      {currentEditingField === 'title' ? (
-                        <TextareaAutosize
-                          minRows={1}
-                          value={editingTitle} 
-                          onChange={(e) => setEditingTitle(e.target.value)}
-                          onBlur={() => handleSave(item.id)} 
-                          onInput={handleAutoResize} 
-                          className={styles["item-edit-form-input"]} 
-                          autoFocus 
-                          onFocus={handleFocus}
-                        />
-                      ) : (
-                        <div className={styles["item-title"]}>
-                          {editingTitle}
-                        </div>
-                      )}
-                      {currentEditingField === 'description' ? (
-                        <TextareaAutosize
-                          minRows={1}
-                          value={editingDescription} 
-                          onChange={(e) => setEditingDescription(e.target.value)}
-                          onBlur={() => handleSave(item.id)} 
-                          onInput={handleAutoResize} 
-                          className={styles["item-edit-form-textarea"]}
-                          autoFocus 
-                          onFocus={handleFocus}
-                        />
-                      ) : (
-                        <div className={styles["item-description"]}>
-                          {editingDescription}
-                        </div>
-                      )}
+                      <div onClick={() => handleEditTitle(item)} className={styles["item-title"]}>
+                        <strong>{item.title}</strong>
+                      </div>
+                      <div onClick={() => handleEditDescription(item)} className={styles["item-description"]}>
+                        {item.description}
+                      </div>
                     </div>
-                  </>
-                ) : (
-                  <div className={styles["item-content"]}>
-                    <div onClick={() => handleEditTitle(item)} className={styles["item-title"]}>
-                      <strong>{item.title}</strong>
-                    </div>
-                    <div onClick={() => handleEditDescription(item)} className={styles["item-description"]}>
-                      {item.description}
-                    </div>
-                  </div>
-                )}
-                <button
-                  className={styles["delete-item-button"]}
-                  onClick={() => deleteItemMutation.mutate(item.id)}
-                />
-              </div>
-            ))}
+                  )}
+                  <button
+                    className={styles["delete-item-button"]}
+                    onClick={() => deleteItemMutation.mutate(item.id)}
+                  />
+                </div>
+              ))}
 
-               <button onClick={() => createNewItem(board.status)} className={styles["add-item-button"]}>+</button>
+              <button onClick={() => createNewItem(board.status)} className={styles["add-item-button"]}>+</button>
             </div>
           ))}
         </div>
       )}
     </div>
   );
-                  }
+}
 
 export default Board;

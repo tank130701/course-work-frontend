@@ -16,19 +16,19 @@ const queryClient = new QueryClient();
 function App() {
   const { store } = useContext(Context);
   return (
-    <QueryClientProvider client={queryClient}>
-      <StrictMode>
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
         <Router>
           <Routes>
             {/* <Route path="/" element={<Root />} /> */}
-            <Route path={'/'} element={store.isAuthenticated() ? <Root /> : <LoginForm /> }/>
+            <Route path={'/'} element={store.isAuthenticated() ? <Root /> : <LoginForm />} />
             {<Route path='/login' element={<LoginForm />} />}
             {<Route path='/root' element={<Root />} />}
             {<Route path='/categories-panel' element={<CategoriesPanel />} />}
           </Routes>
         </Router>
-      </StrictMode>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </StrictMode>
   );
 }
 
