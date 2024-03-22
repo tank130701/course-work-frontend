@@ -156,14 +156,6 @@ function Board({ selectedCategoryId }) {
 
 
 
-
-
-  const handleAutoResize = (e) => {
-    e.target.style.height = "auto";
-    e.target.style.height = e.target.scrollHeight + "px";
-  };
-
-
   const handleFocus = (e) => {
     const value = e.target.value;
     e.target.style.height = 'auto';
@@ -204,7 +196,6 @@ function Board({ selectedCategoryId }) {
                             value={editingTitle}
                             onChange={(e) => setEditingTitle(e.target.value)}
                             onBlur={() => handleSave(item.id)}
-                            onInput={handleAutoResize}
                             className={styles["item-edit-form-input"]}
                             autoFocus
                             onFocus={handleFocus}
@@ -220,7 +211,6 @@ function Board({ selectedCategoryId }) {
                             value={editingDescription}
                             onChange={(e) => setEditingDescription(e.target.value)}
                             onBlur={() => handleSave(item.id)}
-                            onInput={handleAutoResize}
                             className={styles["item-edit-form-textarea"]}
                             autoFocus
                             onFocus={handleFocus}
