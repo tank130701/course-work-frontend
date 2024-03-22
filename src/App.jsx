@@ -1,8 +1,10 @@
-import React, { StrictMode } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Root from './components/Root/Root.jsx';
-import LoginForm from "./components/LoginForm/LoginForm";
+import React, { StrictMode, useContext } from 'react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import CategoriesPanel from './components/CategoriesPanel/CategoriesPanel.jsx';
+import LoginForm from "./components/LoginForm/LoginForm";
+import Root from './components/Root/Root.jsx';
+
+import { Context } from "./index";
 
 import {
   QueryClient,
@@ -12,13 +14,14 @@ import {
 const queryClient = new QueryClient();
 
 function App() {
+  const { store } = useContext(Context);
   return (
     <QueryClientProvider client={queryClient}>
       <StrictMode>
         <Router>
           <Routes>
-            <Route path="/" element={<Root />} />
-            {/*<Route path={'/'} element={store.isAuthenticated() ? <Board /> : <LoginForm /> }/>*/}
+            {/* <Route path="/" element={<Root />} /> */}
+            <Route path={'/'} element={store.isAuthenticated() ? <Root /> : <LoginForm /> }/>
             {<Route path='/login' element={<LoginForm />} />}
             {<Route path='/root' element={<Root />} />}
             {<Route path='/categories-panel' element={<CategoriesPanel />} />}
