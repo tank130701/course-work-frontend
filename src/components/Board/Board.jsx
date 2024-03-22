@@ -191,7 +191,7 @@ const deleteItemMutation = useMutation((id) => ItemsService.Delete(id), {
               {tasks && tasks.filter(task => task.status === board.status).map((item) => (
               <div
                 key={item.id}
-                draggable="true"
+                draggable={editingItemId !== item.id} 
                 onDragStart={(e) => handleDragStart(e, item)}
                 className={styles["item"]}
               >
