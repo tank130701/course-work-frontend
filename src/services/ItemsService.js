@@ -2,9 +2,14 @@ import $api from "../http";
 
 export default class ItemsService {
 
-    static async Create(category_id, title) {
-        return $api.post(`/api/items/${category_id}`, {title})
+    static async Create(category_id, title, description, status) {
+        return $api.post(`/api/items/${category_id}`, {
+            title,
+            description,
+            status
+        });
     }
+    
 
     static async GetAll(category_id) {
         return $api.get(`/api/items/${category_id}`)

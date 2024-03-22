@@ -1,15 +1,15 @@
 .panel{
   display: flex;
   flex-direction: column;
-  width: 18%;
   overflow: auto;
   background-color: #f0f4f8;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  width: 20vw;
 }
 
 
-.edit-button {
+.editButton {
   background: none;
   border: none;
   cursor: pointer;
@@ -18,15 +18,14 @@
 }
 
 
-.edit-button:hover {
+.editButton:hover {
   color: #0056b3; 
   text-decoration: underline; 
 }
 
-.delete-item-button {
+.deleteItemButton{
   left: 80%;
   width: 15%;
-  color: white;
   border: none;
   cursor: pointer;
   font-size: 12px;
@@ -37,14 +36,14 @@
   font-weight: bold;
 }
 
-.delete-item-button:before {
+.deleteItemButton:before {
   content: "\2715";
   display: inline-block;
   margin-right: 5px;
   font-size: 16px;
 }
 
-.delete-item-button:hover{
+.deleteItemButton:hover{
   text-decoration: underline; 
   color: #b4323f;
 }
