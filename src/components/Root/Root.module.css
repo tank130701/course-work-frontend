@@ -38,3 +38,30 @@
 }
 
 
+.logout_button{
+  position: absolute;
+  left: 89%;
+  width: 6%;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+}
+
+
+.logout_button:hover{
+background-color: #0056b3;
+}
+
+
+.logout_button:active {
+
+    transform: scale(0.98); 
+    transition: transform 0.1s ease; 
+  }
+  

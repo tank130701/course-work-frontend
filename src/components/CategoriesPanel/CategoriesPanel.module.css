@@ -6,8 +6,19 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   width: 20vw;
+  margin-top: 110px;
+  border-radius: 8px;
 }
 
+.panel_title{
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 12px;
+
+}
 
 .editButton {
   background: none;
@@ -60,21 +71,21 @@
   width: 90%;
   background-color: #DEDADA;
   margin-top: 5px;
-  margin-left: 7px;
+  margin-left: 12px;
   margin-bottom: 5px;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.category_txt{
+.categoryTxt{
   font-size: 16px;
   margin-left: 10px;
   margin-top: 5px;
   margin-bottom: 5px;
-  max-width: 50%;
+  max-width: 80%;
 }
 
-.category-input{
+.categoryInput{
   background-color: #DEDADA;
   font-size: 16px; 
   border: 0px solid transparent;
@@ -89,29 +100,31 @@
   margin-left: 7px;
   margin-bottom: 5px;
   border-radius: 8px;
-  width: 90%;
+  max-width: 80%;
 }
 
-.new_category_button{
+.newCategoryButton{
     display: flex;
-    margin-left: 30%;
+    margin-left: 5%;
     justify-content: center;
     align-items: center;
-    width: 60px;
+    width: 90%;
     height: 30px;
     background-color: #007bff;
     color: white;
     border-radius: 10%;
     border: none;
     cursor: pointer;
-    font-size: 24px;
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+
 }
 
 
 
-.selectedCategory {
-  background-color: #a4bfe0; 
-}
+
 
 
 .category:active {

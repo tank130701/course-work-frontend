@@ -5,12 +5,17 @@ import { Context } from "../../index";
 import CategoriesPanel from "../CategoriesPanel/CategoriesPanel";
 import styles from "./Root.module.css";
 import Board from "../Board/Board";
+import { useNavigate } from "react-router-dom";
+
+
 
 function Root() {
 
   // const [categories, setCategories] = useState([]);
   const { store } = useContext(Context);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const navigate = useNavigate();
+
 
   // useEffect(() => {
   //   async function fetchAndSetCategories() {
@@ -35,6 +40,7 @@ function Root() {
   // console.log(`Categories[0]: ${categories[0]}`);
 
   return (
+    
     <div className={styles.boardContainer}>
       
       <div className={styles.categoriesPanel}>
@@ -48,7 +54,10 @@ function Root() {
 
 
       <Board selectedCategoryId={store.getCategory()}/>
-
+      <button className={styles["logout_button"]} onClick={() => {
+        store.logout();
+        navigate("/login");
+      }}>Logout</button>
       {/*{categories.map(category => (*/}
       {/*    <div key={category.id}>*/}
       {/*        <h2>{category.name}</h2>*/}

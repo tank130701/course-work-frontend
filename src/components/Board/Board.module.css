@@ -31,8 +31,10 @@
   color: #333;
   padding-top: 15px;
   margin-bottom: 15px;
-  text-align: center;
+  padding-left: 30px;
+  text-align: left;
   font-weight: bold;
+  margin-left: 2px;
 }
 
 .board__title {
@@ -57,15 +59,24 @@
 
 .item-description {
   font-size: 17px; 
+  max-width: 90%;
+  white-space: pre-wrap; 
+  white-space: pre-wrap; 
+  word-wrap: break-word; 
+  overflow-wrap: break-word;
   margin-top: 8px;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
   margin-left: 2px;
   min-height: 20px;
   position: relative;
 }
 
 .item-title {
-  width: 100%;
+  max-width: 90%;
+  white-space: pre-wrap; 
+  white-space: pre-wrap; 
+  word-wrap: break-word; 
+  overflow-wrap: break-word;
   border: none;
   font-size: 19px; 
   margin-top: 2px; 
@@ -87,7 +98,7 @@
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 20px;
   text-align: center;
 }
 
@@ -96,22 +107,32 @@
 }
 
 
-
 .item-edit-form-input,
 .item-edit-form-textarea {
-  width: 100%;
   border: none;
+  white-space: pre-wrap; 
   outline: none;
   resize: none;
-  background-color: transparent;
-  font-family: inherit;
-  font-size: inherit;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  background-color: #DEDADA;
+  margin-top: -2px;
+  transition: background-color 0.2s; /* Плавный переход фона */
+}
+.item-edit-form-textarea{
+  font-size: 17px; /* Размер шрифта */
+  max-width: 94%;
+
 }
 
-.item-edit-form-input:focus,
-.item-edit-form-textarea:focus {
-  background-color: #f0f4f8;
+.item-edit-form-input{
+  font-size: 19px; 
+  font-weight: 680;
+  margin-top: 0px;
+  margin-bottom: -4px;
+  max-width: 90%;
+
 }
+
 
 .delete-item-button {
   position: absolute;

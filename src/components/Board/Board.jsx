@@ -4,6 +4,8 @@ import { useQuery, useMutation } from 'react-query';
 import ItemsService from "../../services/ItemsService";
 import styles from "./Board.module.css";
 import CategoriesService from "../../services/CategoriesService";
+import TextareaAutosize from 'react-textarea-autosize';
+
 
 
 function Board({ selectedCategoryId }) {
@@ -42,14 +44,25 @@ function Board({ selectedCategoryId }) {
     },
 });
 
-const updateItemMutation = useMutation(({ id, title, description, status }) => {
-    return ItemsService.Update(id, title, description, status);
-}, {
-    onSuccess: () => {
-        console.log("Item updated. Refetching...");
-        refetch();
-    },
+const updateItemMutation = useMutation(itemsData => ItemsService.Update(itemsData.id, itemsData.title, itemsData.description, itemsData.status), {
+  onSuccess: (data, variables) => {
+    // Обновляем только измененную задачу в локальном состоянии
+    const updatedTasks = tasks.map(task => 
+      task.id === variables.id ? {...task, ...variables} : task
+    );
+    setTasks(updatedTasks);
+    console.log("Item updated successfully");
+
+    // Сбрасываем состояние редактирования
+    setEditingItemId(null);
+    setCurrentEditingField(null);
+  },
+  onError: (error) => {
+    console.error("Error updating item:", error);
+  },
 });
+
+
 
 
 const deleteItemMutation = useMutation((id) => ItemsService.Delete(id), {
@@ -122,24 +135,31 @@ const deleteItemMutation = useMutation((id) => ItemsService.Delete(id), {
       status: tasks.find(task => task.id === id).status,
     };
   
-    await updateItemMutation.mutateAsync(updatedTask, {
-      onSuccess: () => {
-        // Обновляем состояние, сохраняя порядок элементов
-        const newTasks = tasks.map(task => {
-          if (task.id === id) {
-            return { ...task, ...updatedTask };
-          }
-          return task;
-        });
+    try {
+      await updateItemMutation.mutateAsync({
+        id: updatedTask.id,
+        title: updatedTask.title,
+        description: updatedTask.description,
+        status: updatedTask.status,
+      }, {
+        onSuccess: () => {
+          // После успешного обновления на сервере, обновляем задачу в локальном состоянии
+          const updatedTasks = tasks.map(task =>
+            task.id === id ? { ...task, ...updatedTask } : task
+          );
+          setTasks(updatedTasks);
   
-        setTasks(newTasks);
-  
-        // Сброс состояния редактирования
-        setEditingItemId(null);
-        setCurrentEditingField(null);
-      },
-    });
+          // Сбрасываем состояние редактирования
+          setEditingItemId(null);
+          setCurrentEditingField(null);
+        }
+      });
+    } catch (error) {
+      console.error("Failed to update task:", error);
+    }
   };
+  
+  
   
   
   
@@ -185,7 +205,8 @@ const deleteItemMutation = useMutation((id) => ItemsService.Delete(id), {
              <>
                     <div className={styles["item-content"]}>
                       {currentEditingField === 'title' ? (
-                        <textarea 
+                        <TextareaAutosize
+                          minRows={1}
                           value={editingTitle} 
                           onChange={(e) => setEditingTitle(e.target.value)}
                           onBlur={() => handleSave(item.id)} 
@@ -196,11 +217,12 @@ const deleteItemMutation = useMutation((id) => ItemsService.Delete(id), {
                         />
                       ) : (
                         <div className={styles["item-title"]}>
-                          <strong>{editingTitle}</strong>
+                          {editingTitle}
                         </div>
                       )}
                       {currentEditingField === 'description' ? (
-                        <textarea 
+                        <TextareaAutosize
+                          minRows={1}
                           value={editingDescription} 
                           onChange={(e) => setEditingDescription(e.target.value)}
                           onBlur={() => handleSave(item.id)} 
