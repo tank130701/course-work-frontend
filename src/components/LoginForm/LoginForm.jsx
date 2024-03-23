@@ -13,7 +13,7 @@ const LoginForm = () => {
     const handleLogin = async () => {
         try {
             await store.login(email, password);
-            setError(null); // clear any previous errors
+            setError(null); 
             if (store.isAuth) {
                 navigate("/root");
             }

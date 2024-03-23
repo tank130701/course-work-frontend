@@ -1,18 +1,18 @@
-/* LoginForm.module.css */
 .formContainer {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Занимает всю высоту экрана */
+    height: 100vh; 
 }
 
 .formBox {
     padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: #DEDADA;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    display: inline-block;
+    border-radius: 15px; 
+    background-color: #ffffff; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 3px rgba(0, 0, 0, 0.06); 
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
     max-width: 400px;
     width: 100%;
 }
@@ -20,28 +20,36 @@
 .formInput {
     display: block;
     margin: 10px 0;
-    margin-left: auto;
-    margin-right: auto;
     padding: 10px;
     width: 90%;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 8px; 
+    background-color: #f8f8f8; 
 }
 
 .formButton {
-    display: block;
-    margin: 10px 0;
-    margin-left: 12px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007BFF;
-    color: white;
+    display: inline-block;
+    width: 90%; 
+    padding: 10px;
+    margin-top: 20px; 
+    color: #fff;
+    border-radius: 8px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 500;
+    background: rgb(6,14,131);
+    background: linear-gradient(0deg, rgba(6,14,131,1) 0%, rgba(12,25,180,1) 100%);
     cursor: pointer;
+    transition: all 0.3s ease;
+    border: none; 
+    text-align: center;
+    box-shadow: inset 2px 2px 2px 0px rgba(255,255,255,.5),
+                 7px 7px 20px 0px rgba(0,0,0,.1),
+                 4px 4px 5px 0px rgba(0,0,0,.1);
 }
 
 .formButton:hover {
-    background-color: #0056b3;
+    background: rgb(0,3,255);
+    background: linear-gradient(0deg, rgba(0,3,255,1) 0%, rgba(2,126,251,1) 100%);
 }
 
 .error {

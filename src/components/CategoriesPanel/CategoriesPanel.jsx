@@ -1,9 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import CategoriesService from "../../services/CategoriesService";
-import { FaRegEdit } from "react-icons/fa";
 import { Context } from "../../index";
 import styles from "./CategoriesPanel.module.css";
+import TextareaAutosize from 'react-textarea-autosize';
+
 
 function CategoriesPanel ( {selectedCategoryId, setSelectedCategoryId} ) {
   const { store } = useContext(Context);
@@ -31,6 +32,13 @@ function CategoriesPanel ( {selectedCategoryId, setSelectedCategoryId} ) {
     }
   });
   
+  const handleFocus = (e) => {
+    const value = e.target.value;
+    e.target.style.height = 'auto';
+    e.target.style.height = `${e.target.scrollHeight}px`;
+    e.target.value = '';
+    e.target.value = value;
+  };
 
   const mutation = useMutation(newTitle => CategoriesService.Update(editingCategory, newTitle), {
     onSuccess: () => {
@@ -92,28 +100,27 @@ function CategoriesPanel ( {selectedCategoryId, setSelectedCategoryId} ) {
               onClick={() => handleSelectCategory(category.id)}
             >
               {editingCategory === category.id ? (
-                <input
+                 <TextareaAutosize
+                  minRows={1}
                   defaultValue={category.name}
                   onBlur={(e) => handleSaveCategoryTitle(category.id, e.target.value)}
                   autoFocus
                   className={styles.categoryInput}
+                  onFocus={handleFocus}
                 />
               ) : (
-                <>
+                <div onDoubleClick={() => handleStartEditCategory(category.id)}>
                   <span className={styles.categoryTxt}>{category.name}</span>
-                  <div className={styles.buttons}>
-                    <button onClick={(e) => { e.stopPropagation(); handleStartEditCategory(category.id); }} className={styles.editButton}><FaRegEdit/></button>
-                    <button onClick={(e) => { e.stopPropagation(); handleDeleteCategory(category.id); }} className={styles.deleteItemButton}></button>
-                  </div>
-                </>
+                </div>
               )}
+              <button onClick={(e) => { e.stopPropagation(); handleDeleteCategory(category.id); }} className={styles.deleteItemButton}></button>
             </div>
           ))
         ) : (
           <div>No categories available</div>
         )
       )}
-      <button onClick={handleCreateCategory} className={styles.newCategoryButton}>+</button>
+      <button onClick={handleCreateCategory} className={styles.newCategoryButton}>Добавить категорию</button>
     </div>
   );
 }

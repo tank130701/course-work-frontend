@@ -7,6 +7,8 @@ import TextareaAutosize from 'react-textarea-autosize';
 
 
 
+
+
 function Board({ selectedCategoryId }) {
   const [tasks, setTasks] = useState([]);
   const [categoryTitle, setCategoryTitle] = useState('');
@@ -71,13 +73,16 @@ function Board({ selectedCategoryId }) {
 
 
   const createNewItem = (status) => {
-    createItemMutation.mutate({
+    const newTask = {
       categoryId: selectedCategoryId,
-      title: "Новая задача",
-      description: "Описание задачи",
+      title: "Новая задача", 
+      description: "Описание задачи", 
       status,
-    });
+      isNew: true 
+    };
+    createItemMutation.mutate(newTask);
   };
+  
 
   const handleDragStart = (e, item) => {
     e.dataTransfer.setData("application/reactflow", JSON.stringify(item));
@@ -96,9 +101,9 @@ function Board({ selectedCategoryId }) {
   };
 
   const boards = [
-    { id: 1, title: "Todo", status: "todo" },
+    { id: 1, title: "To Do", status: "todo" },
     { id: 2, title: "In Progress", status: "in_progress" },
-    { id: 3, title: "Completed", status: "completed" },
+    { id: 3, title: "Done", status: "completed" },
   ];
 
   const [editingTitle, setEditingTitle] = useState("");
@@ -156,18 +161,28 @@ function Board({ selectedCategoryId }) {
 
 
 
-  const handleFocus = (e) => {
-    const value = e.target.value;
-    e.target.style.height = 'auto';
-    e.target.style.height = `${e.target.scrollHeight}px`;
-    e.target.value = '';
-    e.target.value = value;
+  const handleFocus = (e, defaultValue) => {
+    if (e.target.value === defaultValue) {
+      e.target.value = '';
+    }
+  
+    setTimeout(() => {
+      const value = e.target.value;
+      e.target.selectionStart = value.length;
+      e.target.selectionEnd = value.length;
+    }, 0);
   };
+  
+  
+  
+  
+  
 
 
   return (
     <div className={styles["mainContainer"]}>
       <h1 className={styles["categoryTitle"]}>{categoryTitle}</h1>
+      
       {isLoading && isCategoryLoading ? (
         <div>Loading...</div>
       ) : (
@@ -180,6 +195,7 @@ function Board({ selectedCategoryId }) {
               onDrop={(e) => handleDrop(e, board.status)}
             >
               <div className={styles["board__title"]}>{board.title}</div>
+
               {tasks && tasks.filter(task => task.status === board.status).map((item) => (
                 <div
                   key={item.id}
@@ -191,30 +207,32 @@ function Board({ selectedCategoryId }) {
                     <>
                       <div className={styles["item-content"]}>
                         {currentEditingField === 'title' ? (
-                          <TextareaAutosize
-                            minRows={1}
-                            value={editingTitle}
-                            onChange={(e) => setEditingTitle(e.target.value)}
-                            onBlur={() => handleSave(item.id)}
-                            className={styles["item-edit-form-input"]}
-                            autoFocus
-                            onFocus={handleFocus}
-                          />
+                        <TextareaAutosize
+                        minRows={1}
+                        value={editingTitle}
+                        onChange={(e) => setEditingTitle(e.target.value)}
+                        onBlur={() => handleSave(item.id)}
+                        onFocus={(e) => handleFocus(e, item.isNew)}
+                        placeholder={item.isNew ? "Новая задача" : ""}
+                        className={styles["item-edit-form-input"]}
+                        autoFocus
+                      />
                         ) : (
                           <div className={styles["item-title"]}>
                             {editingTitle}
                           </div>
                         )}
                         {currentEditingField === 'description' ? (
-                          <TextareaAutosize
-                            minRows={1}
-                            value={editingDescription}
-                            onChange={(e) => setEditingDescription(e.target.value)}
-                            onBlur={() => handleSave(item.id)}
-                            className={styles["item-edit-form-textarea"]}
-                            autoFocus
-                            onFocus={handleFocus}
-                          />
+                         <TextareaAutosize
+                         minRows={1}
+                         value={editingDescription}
+                         onChange={(e) => setEditingDescription(e.target.value)}
+                         onBlur={() => handleSave(item.id)}
+                         onFocus={(e) => handleFocus(e, item.isNew)}
+                         placeholder={item.isNew ? "Описание задачи" : ""}
+                         className={styles["item-edit-form-textarea"]}
+                         autoFocus
+                       />
                         ) : (
                           <div className={styles["item-description"]}>
                             {editingDescription}
@@ -238,10 +256,10 @@ function Board({ selectedCategoryId }) {
                   />
                 </div>
               ))}
-
-              <button onClick={() => createNewItem(board.status)} className={styles["add-item-button"]}>+</button>
+              <button onClick={() => createNewItem(board.status)} className={styles["add-item-button"]}>Добавить дело</button>
             </div>
           ))}
+          
         </div>
       )}
     </div>
