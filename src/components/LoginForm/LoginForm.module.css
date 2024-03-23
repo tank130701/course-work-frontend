@@ -56,3 +56,28 @@
     color: red;
     margin-top: 10px;
 }
+
+.siteHeader {
+    position: absolute;
+    top: 30%;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.siteIcon {
+    width: 70px; /* настройте размер иконки по вашему выбору */
+    height: 70px; /* настройте размер иконки по вашему выбору */
+    margin-bottom: 10px;
+}
+
+.siteName {
+    font-size: 27px; /* настройте размер шрифта по вашему выбору */
+    font-family: "Cascadia Mono", sans-serif;
+    color: #333; /* настройте цвет текста по вашему выбору */
+    font-weight: bold; /* настройте жирность текста по вашему выбору */
+    text-align: center;
+}

@@ -24,6 +24,10 @@ const LoginForm = () => {
 
     return (
         <div className={styles.formContainer}>
+            <div className={styles.siteHeader}>
+                <img src="/notion.svg" alt="Иконка сайта" className={styles.siteIcon}/>
+                <h1 className={styles.siteName}>ProNotion</h1>
+            </div>
             <div className={styles.formBox}>
                 <input
                     className={styles.formInput}
@@ -39,14 +43,14 @@ const LoginForm = () => {
                     type="password"
                     placeholder='Password'
                 />
-                <button 
-                    className={styles.formButton} 
+                <button
+                    className={styles.formButton}
                     onClick={handleLogin}
                 >
                     Login
                 </button>
-                <button 
-                    className={styles.formButton} 
+                <button
+                    className={styles.formButton}
                     onClick={() => store.registration(email, password)}
                 >
                     Register
