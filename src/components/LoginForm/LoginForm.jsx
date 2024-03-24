@@ -23,7 +23,12 @@ const LoginForm = () => {
                 navigate("/root");
             }
         } catch (e) {
-            setError(e.response?.data?.message || "Ошибка авторизации.");
+            
+            if (e.response && e.response.status === 404) {
+                setError("Неверный  логин или пароль.");
+            } else {
+                setError(e.response?.data?.message || "Ошибка авторизации.");
+            }
         }
     };
 
@@ -36,11 +41,16 @@ const LoginForm = () => {
             await store.registration(email, password);
             setError('');
             setSuccessMessage("Регистрация прошла успешно. Теперь вы можете войти в систему.");
-            navigate("/login"); // или куда вы хотите направить пользователя после регистрации
+            navigate("/login");
         } catch (e) {
-            setError(e.response?.data?.message || "Ошибка регистрации.");
+            if (e.response && e.response.status === 409) {
+                setError("Пользователь с таким UserName уже существует.");
+            } else {
+                setError(e.response?.data?.message || "Ошибка регистрации.");
+            }
         }
     };
+    
 
     console.log(error);
     return (
