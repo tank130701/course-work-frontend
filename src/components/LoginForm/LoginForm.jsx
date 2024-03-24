@@ -9,8 +9,13 @@ const LoginForm = () => {
     const [error, setError] = useState(null);
     const { store } = useContext(Context);
     const navigate = useNavigate();
+    const [successMessage, setSuccessMessage] = useState('');
 
     const handleLogin = async () => {
+        if (!email || !password) {
+            setError("Пожалуйста, заполните все поля.");
+            return;
+        }
         try {
             await store.login(email, password);
             setError(null); 
@@ -18,10 +23,26 @@ const LoginForm = () => {
                 navigate("/root");
             }
         } catch (e) {
-            setError(e.response?.data?.message);
+            setError(e.response?.data?.message || "Ошибка авторизации.");
         }
     };
 
+    const handleRegistration = async () => {
+        if (!email || !password) {
+            setError("Пожалуйста, заполните все поля.");
+            return;
+        }
+        try {
+            await store.registration(email, password);
+            setError('');
+            setSuccessMessage("Регистрация прошла успешно. Теперь вы можете войти в систему.");
+            navigate("/login"); // или куда вы хотите направить пользователя после регистрации
+        } catch (e) {
+            setError(e.response?.data?.message || "Ошибка регистрации.");
+        }
+    };
+
+    console.log(error);
     return (
         <div className={styles.formContainer}>
             <div className={styles.siteHeader}>
@@ -49,13 +70,11 @@ const LoginForm = () => {
                 >
                     Login
                 </button>
-                <button
-                    className={styles.formButton}
-                    onClick={() => store.registration(email, password)}
-                >
-                    Register
-                </button>
+                <button className={styles.formButton} onClick={handleRegistration}>Register</button>
+
                 {error && <div className={styles.error}>{error}</div>}
+                {successMessage && <div className={styles.success}>{successMessage}</div>}
+
             </div>
         </div>
     );

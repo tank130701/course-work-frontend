@@ -53,6 +53,7 @@ class Store {
             console.log(this.isAuth)
         } catch (e) {
             console.log(e.response?.data?.message);
+            throw e;
         }
     }
 
