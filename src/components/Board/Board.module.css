@@ -103,7 +103,7 @@
 .add-item-button {
   position: absolute;
   bottom: 10px; 
-  width: calc(100% - 40px); 
+  width: 70%; 
   padding: 10px;
   color: #fff;
   border-radius: 8px;
