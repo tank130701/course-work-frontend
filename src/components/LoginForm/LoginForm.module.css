@@ -1,20 +1,22 @@
 .formContainer {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    height: 100vh; 
+    justify-content: center;
+    height: 100vh;
 }
 
 .formBox {
     padding: 20px;
-    border-radius: 15px; 
-    background-color: #ffffff; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 3px rgba(0, 0, 0, 0.06); 
+    border-radius: 15px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 3px rgba(0, 0, 0, 0.06);
     display: flex;
-    flex-direction: column; 
-    align-items: center; 
+    flex-direction: column;
+    align-items: center;
     max-width: 400px;
     width: 100%;
+    margin-top: 20px; 
 }
 
 .formInput {
@@ -58,26 +60,25 @@
 }
 
 .siteHeader {
-    position: absolute;
-    top: 30%;
-    width: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    margin-bottom: 20px;
+    margin-bottom: 20px; 
 }
 
 .siteIcon {
-    width: 70px; /* настройте размер иконки по вашему выбору */
-    height: 70px; /* настройте размер иконки по вашему выбору */
+    
+    width: 70px; 
+    height: 70px; 
     margin-bottom: 10px;
 }
 
 .siteName {
-    font-size: 27px; /* настройте размер шрифта по вашему выбору */
+    
+    font-size: 27px; 
     font-family: "Cascadia Mono", sans-serif;
-    color: #333; /* настройте цвет текста по вашему выбору */
-    font-weight: bold; /* настройте жирность текста по вашему выбору */
+    color: #333; 
+    font-weight: bold; 
     text-align: center;
 }
