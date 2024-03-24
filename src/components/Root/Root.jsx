@@ -4,6 +4,7 @@ import CategoriesPanel from "../CategoriesPanel/CategoriesPanel";
 import Board from "../Board/Board";
 import { useNavigate } from "react-router-dom";
 import styles from "./Root.module.css"; 
+import { SelectedCategoryProvider } from '../../components/SelectedCategoryContext.js';
 
 function Root() {
   const { store } = useContext(Context);
@@ -15,6 +16,8 @@ function Root() {
   }
 
   return (
+    <SelectedCategoryProvider>
+
     <div className={styles.boardContainer}>      
       <div className={styles.categoriesPanel}>
         <CategoriesPanel
@@ -33,6 +36,8 @@ function Root() {
 
       
     </div>
+    </SelectedCategoryProvider>
+
   );
 }
 

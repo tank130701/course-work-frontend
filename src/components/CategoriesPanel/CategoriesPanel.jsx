@@ -4,19 +4,20 @@ import CategoriesService from "../../services/CategoriesService";
 import { Context } from "../../index";
 import styles from "./CategoriesPanel.module.css";
 import TextareaAutosize from 'react-textarea-autosize';
+import { useSelectedCategory } from '../../components/SelectedCategoryContext.js'; 
 
 
-function CategoriesPanel ( {selectedCategoryId, setSelectedCategoryId} ) {
+function CategoriesPanel (  ) {
   const { store } = useContext(Context);
   
   const [editingCategory, setEditingCategory] = useState(null);
   const queryClient = useQueryClient();
+  const { selectedCategoryId, setSelectedCategoryId } = useSelectedCategory(); 
 
   const { data: categories, isLoading } = useQuery('categories', CategoriesService.GetAll, {
     select: data => data?.data, 
     onSuccess: data => {
-      if (data && data.length > 0) { 
-        console.log("Fetched Categories", data[0].id);
+      if (data && data.length > 0) {
         if (store.getCategory() === 0) {
           handleSelectCategory(data[0].id);
         } else {
@@ -25,13 +26,11 @@ function CategoriesPanel ( {selectedCategoryId, setSelectedCategoryId} ) {
       } else {
         console.log("No categories fetched or categories are empty");
         setSelectedCategoryId(null); 
-       
       }
-      store.setLoading(false); 
-      console.log("Store", store);
+      store.setLoading(false);
     }
   });
-  
+
   const handleFocus = (e) => {
     const value = e.target.value;
     e.target.style.height = 'auto';
@@ -43,6 +42,7 @@ function CategoriesPanel ( {selectedCategoryId, setSelectedCategoryId} ) {
   const mutation = useMutation(newTitle => CategoriesService.Update(editingCategory, newTitle), {
     onSuccess: () => {
       queryClient.invalidateQueries('categories');
+      queryClient.refetchQueries(['fetchItems', selectedCategoryId]);
     },
   });
 
@@ -65,6 +65,8 @@ function CategoriesPanel ( {selectedCategoryId, setSelectedCategoryId} ) {
   const handleSaveCategoryTitle = (id, newTitle) => {
     mutation.mutate(newTitle);
     setEditingCategory(null);
+    setSelectedCategoryId(id);
+
   };
 
   const handleSelectCategory = (id) => {

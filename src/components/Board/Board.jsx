@@ -4,14 +4,14 @@ import ItemsService from "../../services/ItemsService";
 import styles from "./Board.module.css";
 import CategoriesService from "../../services/CategoriesService";
 import TextareaAutosize from 'react-textarea-autosize';
+import { useSelectedCategory } from '../../components/SelectedCategoryContext.js'; 
 
 
-
-
-
-function Board({ selectedCategoryId }) {
+ 
+function Board() {
   const [tasks, setTasks] = useState([]);
   const [categoryTitle, setCategoryTitle] = useState('');
+  const { selectedCategoryId } = useSelectedCategory();
 
 
   const { isLoading, refetch } = useQuery(['fetchItems', selectedCategoryId], () => ItemsService.GetAll(selectedCategoryId), {
